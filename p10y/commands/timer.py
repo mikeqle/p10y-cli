@@ -3,10 +3,12 @@ import click
 import time
 import sys
 import platform
+from p10y.helpers.loggers import task_logger
 
 @click.command()
 @click.argument('minutes', type=int)
-def timer(minutes):
+@click.option('--task-name', type=str, default="null", help="Name of the task being timed")
+def timer(minutes, task_name):
     """
     Runs a timer for MINUTES minutes and beeps 3 times when finished.
     """
@@ -23,8 +25,10 @@ def timer(minutes):
         for _ in range(beep_times):
             beep()
             # time.sleep(0.5)  # Short pause between beeps
+        task_logger(task_name, minutes, "completed")
     except KeyboardInterrupt:
         click.echo("\nTimer cancelled.")
+        task_logger(task_name, minutes, "cancelled")
         sys.exit(0)
 
 def beep():
