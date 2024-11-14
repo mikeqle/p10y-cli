@@ -13,6 +13,7 @@ def timer(minutes, name):
     Runs a timer for MINUTES minutes and beeps 3 times when finished.
     """
     total_seconds = minutes * 60
+    start_time = time.time()
     click.echo(f"Timer started for {minutes} minute(s).")
     try:
         for remaining in range(total_seconds, 0, -1):
@@ -27,8 +28,10 @@ def timer(minutes, name):
             # time.sleep(0.5)  # Short pause between beeps
         task_logger(name, minutes, "completed")
     except KeyboardInterrupt:
-        click.echo("\nTimer cancelled.")
-        task_logger(name, minutes, "cancelled")
+        elapsed_seconds = int(time.time() - start_time)
+        elapsed_minutes = elapsed_seconds // 60  # Round down to nearest minute
+        click.echo("\nTimer interrupted.")
+        task_logger(name, elapsed_minutes, "completed")
         sys.exit(0)
 
 def beep():
